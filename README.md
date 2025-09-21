@@ -25,30 +25,7 @@
 
 ---
 
-## Project Structure
-```
-src
-├─ main
-│ ├─ java/com/furniture/shop/furniture_shop
-│ │ ├─ FurnitureShopApplication.java
-│ │ ├─ config/
-│ │ │ └─ SecurityConfig.java
-│ │ ├─ controller/
-│ │ │ └─ HelloController.java
-│ │ ├─ model/
-│ │ │ ├─ product/Product.java
-│ │ │ └─ user/{Role.java, User.java}
-│ │ └─ repository/
-│ │ ├─ product/ProductRepository.java
-│ │ └─ user/UserRepository.java
-│ └─ resources/
-│ ├─ application.yml
-│ ├─ application-dev.yml
-│ └─ db/mysql/schema.sql # (dev에서 실행)
-└─ test
-├─ java/com/furniture/shop/furniture_shop/repository
-│ ├─ product/ProductRepositoryTest.java
-│ └─ user/UserRepositoryTest.java
-└─ resources/application-test.yml
-```
+## 📆 진행 상황
+Day별 진행 로그는 [📘 Daily Log](docs/daily-log.md)에서 확인할 수 있습니다.
+
 
