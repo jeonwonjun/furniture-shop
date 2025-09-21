@@ -1,0 +1,31 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/furniture_shop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Seoul&characterEncoding=utf8
+    username: fs_dev
+    password: fs_dev   # ✅ DB에서 만든 비번과 일치시키세요 (전에 예시가 fs_dev_pw였음)
+    driver-class-name: com.mysql.cj.jdbc.Driver
+
+  jpa:
+    hibernate:
+      ddl-auto: none       # ✅ 스키마는 schema.sql이 담당
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        # dialect는 드라이버로 자동 추론됨. 명시 유지해도 무방하지만 제거해도 OK
+        # dialect: org.hibernate.dialect.MySQL8Dialect
+    # 만약 나중에 ddl-auto를 validate/update로 바꿀 계획이면 아래 한 줄을 켜두면
+    # schema.sql 실행 후 JPA가 동작하도록 순서를 보장합니다.
+    defer-datasource-initialization: true   # ✅ 선택(권장)
+
+  sql:
+    init:
+      mode: always          # ✅ dev에서 schema.sql 항상 실행
+      encoding: utf-8
+      schema-locations: classpath:schema.sql
+      # data-locations: classpath:data.sql  # (선택) 더미 데이터 넣을 때
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.orm.jdbc.bind: trace
