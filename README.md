@@ -32,7 +32,9 @@ Day별 진행 로그는 [📘 Daily Log](docs/daily-log.md)에서 확인할 수 
 ## 플로우차트
 ### 회원가입 로그인
 <img width="320" height="640" alt="회원가입 플로우차트" src="https://github.com/user-attachments/assets/9fc2629a-7e90-4108-b9d4-8ce95ffa00c9" />
+
 ### 로그인 & JWT발급
 <img width="640" height="640" alt="로그인 JWT발급 플로우차트" src="https://github.com/user-attachments/assets/98e75eb0-cb65-43e4-aaf5-98bf5651598c" />
+
 ### JWT를 이용한 요청
 <img width="640" height="640" alt="JWT를 이용한 요청" src="https://github.com/user-attachments/assets/626654ad-79a1-4f54-85c5-b66d06cb8501" />
