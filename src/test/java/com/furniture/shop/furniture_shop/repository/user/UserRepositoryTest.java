@@ -24,7 +24,7 @@ class UserRepositoryTest {
     @Test
     @DisplayName("User 저장 & 이메일 조회")
     void saveAndFindByEmail() {
-        User u = new User("a@example.com", "{noop}pw", Role.USER);
+        User u = new User("a@example.com", "pw", Role.USER, true);
         userRepository.save(u);
 
         assertThat(u.getId()).isNotNull();

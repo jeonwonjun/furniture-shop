@@ -26,7 +26,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Product 저장 & 존재 확인")
     void saveAndExists() {
-        Product p = new Product("의자 A", new BigDecimal("129000.00"), 50);
+        Product p = new Product("의자 A", 129000L, 50);
         productRepository.save(p);
 
         assertThat(p.getId()).isNotNull();

@@ -1,3 +1,8 @@
 spring:
   profiles:
     active: dev
+
+app:
+  jwt:
+    secret: "change-me-to-a-very-long-random-secret-key-at-least-64-bytes"
+    expiration-ms: 3600000   # 1시간

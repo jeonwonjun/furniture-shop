@@ -1,11 +1,15 @@
 package com.furniture.shop.furniture_shop.model.user;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
+import jdk.jfr.Enabled;
+import lombok.*;
 
 import java.time.LocalDateTime;
 
+@AllArgsConstructor
+@Getter
+@Setter
+@Builder
 @Entity
 @Table(name = "users",
         uniqueConstraints = @UniqueConstraint(name = "uk_users_email", columnNames = "email"))
@@ -22,22 +26,23 @@ public class User {
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 20)
-    private Role role = Role.USER;
+    private Role role;
 
     @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    private Boolean enabled;
 
     protected User() {} // JPA 기본 생성자
 
-    public User(String email, String password, Role role) {
+    public User(String email, String password, Role role, Boolean enabled) {
         this.email = email;
         this.password = password;
         this.role = role;
+        this.enabled = enabled;
     }
 
-    public Long getId() { return id; }
+/*    public Long getId() { return id; }
     public String getEmail() { return email; }
     public String getPassword() { return password; }
     public Role getRole() { return role; }
-    public LocalDateTime getCreatedAt() { return createdAt; }
+    public Boolean getEnabled() { return enabled; }*/
 }

@@ -1,27 +1,68 @@
 package com.furniture.shop.furniture_shop.config;
 
+import com.furniture.shop.furniture_shop.config.jwt.JwtAuthenticationFilter;
+import com.furniture.shop.furniture_shop.config.jwt.JwtTokenProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.*;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
-import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.*;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
+    private final JwtTokenProvider tokenProvider;
+    public SecurityConfig(JwtTokenProvider tokenProvider) { this.tokenProvider = tokenProvider; }
+
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .csrf().disable() // 개발 단계에서는 꺼도 됨
-                .authorizeHttpRequests((auth) -> auth
-                        .requestMatchers("/api/hello").permitAll() // 특정 API 허용
-                        .anyRequest().authenticated()              // 나머지는 인증 필요
-                )
-                .formLogin().disable()   // /login 폼 비활성화
-                .httpBasic();            // 필요하다면 HTTP Basic 활성화
 
-        return http.build();
+        return http
+                .csrf(csrf -> csrf.disable())
+                .headers(h -> h.frameOptions(HeadersConfigurer.FrameOptionsConfig::sameOrigin))
+                .authorizeHttpRequests(auth -> auth
+                        .requestMatchers(
+                                "/api/auth/signup",
+                                "/api/auth/login",
+                                "/api/hello",
+                                "/h2-console/**",
+                                "/api/products/**"
+                        ).permitAll()
+                        .anyRequest().authenticated()
+                )
+                .httpBasic(Customizer.withDefaults())
+                .addFilterBefore(new JwtAuthenticationFilter(tokenProvider), UsernamePasswordAuthenticationFilter.class)
+                .cors(cors -> {})
+                .build();
+    }
+
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration cfg) throws Exception {
+        return cfg.getAuthenticationManager();
+    }
+
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    // @Bean
+    @Bean
+    org.springframework.web.cors.CorsConfigurationSource corsConfigurationSource() {
+        var c = new org.springframework.web.cors.CorsConfiguration();
+        c.addAllowedOriginPattern("http://localhost:5173");
+        c.addAllowedHeader("*");
+        c.addAllowedMethod("*");
+        var s = new org.springframework.web.cors.UrlBasedCorsConfigurationSource();
+        s.registerCorsConfiguration("/**", c);
+        return s;
     }
 }
-
