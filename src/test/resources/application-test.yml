@@ -13,4 +13,5 @@ spring:
         format_sql: true
   sql:
     init:
-      mode: never
+      mode: always #never
+      schema-locations: classpath:schema.sql
