@@ -4,9 +4,7 @@
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-3.5.6-brightgreen)](https://spring.io/projects/spring-boot)
 [![Java](https://img.shields.io/badge/Java-17-orange)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) <!-- LICENSE 파일이 있다면 연결 -->
-
-![CI](https://github.com/jeonwonjun/furniture-shop/actions/workflows/ci-mysql.yml)
-
+![CI](https://github.com/jeonwonjun/furniture-shop/actions/workflows/ci-mysql.yml/badge.svg)
 
 간단한 가구 쇼핑몰 백엔드 시작 프로젝트입니다.
 
