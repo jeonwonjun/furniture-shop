@@ -5,7 +5,7 @@
 [![Java](https://img.shields.io/badge/Java-17-orange)](https://www.oracle.com/java/technologies/javase/jdk17-archive-downloads.html)
 [![License](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE) <!-- LICENSE 파일이 있다면 연결 -->
 
-간단한 가구 쇼핑몰 백엔드 시작 프로젝트입니다.  
+간단한 가구 쇼핑몰 백엔드 시작 프로젝트입니다.
 현재 Day 1까지 **도메인(User, Product)**, **MySQL + H2 환경**, **JPA 리포지토리**, **기본 보안 설정** 및 **단위 테스트**가 구성되었습니다.
 
 ---

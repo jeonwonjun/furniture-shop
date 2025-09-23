@@ -7,7 +7,7 @@
 
 ## Day 1 (2025-09-21)
 
-### 작업 내용
+### ✅ 작업 내용
 - Spring Boot 프로젝트 초기화 (`spring init`)
 - DB 분리 설정
   - dev: MySQL (`application-dev.yml`)
@@ -15,7 +15,7 @@
 - User, Product 엔티티 및 Repository 작성
 - JUnit + H2 기반 단위테스트 작성 (`UserRepositoryTest`, `ProductRepositoryTest`)
 
-### 문제 및 해결 과정
+### ⚡ 문제 및 해결 과정
 1. **테스트 클래스 경로 문제**
    - 오류: `Unable to find a @SpringBootConfiguration`
    - 원인: 테스트 파일을 `src/main/java`에 두었음
@@ -33,70 +33,70 @@
      - 테스트용 DB는 `hibernate.ddl-auto=create-drop`으로 자동 생성하도록 설정
      - `application-test.yml`에 `spring.sql.init.mode=never` 추가해 `schema.sql` 무시
 
-### 배운 점
+### ✨ 배운 점
 - JUnit 테스트 환경은 반드시 **`src/test/java`** 폴더에서 관리해야 한다.  
 - H2는 MySQL 호환 모드를 켜도 100% 동일하지 않으므로, 테스트 시 스키마 자동 생성 전략을 쓰는 게 편리하다.  
 - 테스트 환경과 개발 환경을 **프로파일 분리(dev/test)** 해서 관리하면 디버깅 시간이 크게 줄어든다.
 
 ---
 
-## Day 2 (2025-09-22) _예정_
+## 📅 Day 2 (2025-09-22)
 
-### 🔼 핵심 기능 1차 완성 (회원가입/로그인 + 상품목록)
+### ✅ 작업 내용
+- **회원가입/로그인 (JWT 인증)**  
+  - Spring Security + JWT 토큰 발급/검증 기능 구현  
+  - 회원가입 시 비밀번호 Bcrypt 저장 로직 적용  
 
----
+- **JUnit 테스트**  
+  - UserRepository, ProductRepository, AuthController 테스트 작성  
 
-### 1. 인증/인가
-- Spring Security + JWT 기반 회원가입/로그인 구현
-- **Controller**
-  - `POST /api/auth/signup` : 회원가입
-    - 비밀번호 `BCrypt` 해시 저장
-  - `POST /api/auth/login` : 로그인
-    - JWT 토큰 발급 후 응답
-- **Service/Repository**
-  - UserService: 회원 저장, 로그인 검증 로직
-  - UserRepository: 이메일로 사용자 조회
-- **테스트**
-  - 회원가입/로그인 시나리오 단위 테스트 작성
+- **상품 API**  
+  - `/api/products`, `/api/products/{id}` 구현 및 테스트 데이터 확인  
 
----
+- **프론트엔드 연동**  
+  - React + Vite 세팅 후 상품 목록/상세 페이지와 백엔드 API 연결  
 
-### 2. 상품 목록/상세
-- **Controller**
-  - `GET /api/products` : 상품 전체 목록 조회
-  - `GET /api/products/{id}` : 특정 상품 상세 조회
-- **Service/Repository**
-  - ProductService: 상품 조회 로직
-  - ProductRepository: JPA CRUD
-- **테스트 데이터**
-  - schema.sql 또는 data.sql에 3~4개 상품 insert
-  - GET API 호출 → 정상 응답 확인 (단위 + 통합 테스트)
 
----
+### ⚡ 문제 & 해결 과정
+1. **테스트 오류 (401 대신 404 발생)**
+   -  원인: SecurityConfig 설정과 MockMvc 요청 경로 불일치
+   -  해결: Security 설정 조정 및 테스트 기대값 수정 → 정상적으로 401/200 확인  
 
-### 3. 프런트엔드 시작
-- 프로젝트 루트에 `frontend/` 폴더 생성
-- React + Vite 환경 세팅
-- **Pages**
-  - Home: 상품 목록 (Spring API 연동 → axios로 fetch → grid UI 표시)
-  - ProductDetail: 상품 상세 페이지 (상품 id 기반 조회)
-- axios로 Spring API 호출 연결
+2. **프론트엔드 빈 화면**
+   - 원인: 초기 라우팅/컴포넌트 구조가 제대로 연결되지 않음
+   - 해결: `main.tsx` + `App.tsx` 구조 정리, axios로 API 호출 후 목록 렌더링 성공  
+
+3. **Node.js 버전 문제 (crypto.hash 에러)**
+   - 원인: Vite 6가 Node.js 20.19+ 이상 필요, 설치된 버전은 20.10.0
+   - 해결: Node.js 22.12.0 설치 후 정상 실행  
+
+
+### ✨ 오늘의 성과
+- 회원가입/로그인부터 상품 조회까지 **백엔드–프런트엔드 전체 흐름 완성**  
+- 주요 에러를 직접 해결하면서 **Spring Security 인증 흐름**과 **React-Vite 환경 구성**에 대한 이해도 상승  
 
 ---
 
-### 4. GitHub Actions CI 세팅
+## Day 3 할 일 예정 (2025-09-23)
+
+### 1. GitHub Actions CI 세팅
 - `.github/workflows/ci.yml` 작성
 - main/dev 브랜치 푸시 시:
   - Gradle 빌드 & 테스트 실행
   - JUnit 테스트 리포트 확인
 - 추후 프론트엔드 빌드 job 추가 가능
 
+### 2. 장바구니 기능
+- **백엔드**
+  - API: `/api/cart`
+    - `POST /api/cart` → 장바구니에 상품 추가
+    - `GET /api/cart` → 현재 로그인 유저의 장바구니 조회
+    - `DELETE /api/cart/{itemId}` → 장바구니 아이템 삭제
+  - DB 테이블: `cart_items`
+    - `id`, `user_id`, `product_id`, `quantity`, `created_at`
+- **프론트엔드**
+  - “장바구니 담기” 버튼 → 상품 상세 페이지에서 동작
+  - `/cart` 페이지 구현 → 장바구니 목록, 수량, 삭제 기능
+
 ---
 
-### 🎯 목표
-- **백엔드**
-  - 회원가입/로그인 API + 상품 조회 API 정상 동작
-- **프론트엔드**
-  - 상품 목록 페이지에서 API 연동 확인
-- **CI**
-  - GitHub Actions 빌드 & 테스트 자동화
