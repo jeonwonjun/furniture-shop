@@ -1,0 +1,124 @@
+name: CI
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+  workflow_dispatch: {}   # ← 수동 실행 허용
+
+permissions:
+  contents: read
+
+jobs:
+  backend:
+    # if: needs.changes.outputs.backend == 'true'
+    # needs: changes
+    name: Backend (Gradle)
+    runs-on: ubuntu-latest
+
+    # services:
+    #   mysql:
+    #     image: mysql:8
+    #     env:
+    #       MYSQL_ROOT_PASSWORD: root
+    #       MYSQL_DATABASE: furniture_shop
+    #       MYSQL_USER: fs_dev
+    #       MYSQL_PASSWORD: fs_dev
+    #     ports:
+    #       - 3306:3306
+    #     options: >-
+    #       --health-cmd="mysqladmin ping -h 127.0.0.1 -uroot -proot"
+    #       --health-interval=10s
+    #       --health-timeout=5s
+    #       --health-retries=5
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 17
+          cache: gradle
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      # (선택) 테스트 로그 보기 좋게
+      # - name: Show Gradle version
+      #   run: ./gradlew -v
+
+      # 테스트만 먼저
+      - name: Test
+        run: ./gradlew clean test --no-daemon
+
+      # 빌드(JAR 생성)
+      - name: Build
+        run: ./gradlew build -x test --no-daemon
+
+      # 산출물 업로드 (JAR)
+      - name: Upload backend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: backend-jar
+          path: build/libs/*.jar
+          if-no-files-found: error
+
+  frontend:
+    # if: needs.changes.outputs.frontend == 'true'
+    # needs: changes
+    name: Frontend (Vite)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use Node.js 22.12.0
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22.12.0
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install deps
+        run: npm ci
+
+      - name: Build
+        run: npm run build
+
+      # 산출물 업로드 (dist)
+      - name: Upload frontend artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: frontend-dist
+          path: frontend/dist
+          if-no-files-found: error
+
+  changes:
+    runs-on: ubuntu-latest
+    outputs:
+      backend: ${{ steps.filter.outputs.backend }}
+      frontend: ${{ steps.filter.outputs.frontend }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: dorny/paths-filter@v3
+        id: filter
+        with:
+          filters: |
+            backend:
+              - 'build.gradle'
+              - 'settings.gradle'
+              - 'gradlew'
+              - 'gradlew.bat'
+              - 'src/**'
+            frontend:
+              - 'frontend/**'
+
+
