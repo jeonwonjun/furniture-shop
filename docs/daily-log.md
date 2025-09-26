@@ -77,26 +77,77 @@
 
 ---
 
-## Day 3 할 일 예정 (2025-09-23)
+## 📅 Day 3 (2025-09-23)
 
-### 1. GitHub Actions CI 세팅
+
+### ✅ 작업 내용
+
+### GitHub Actions CI 세팅
 - `.github/workflows/ci.yml` 작성
-- main/dev 브랜치 푸시 시:
-  - Gradle 빌드 & 테스트 실행
-  - JUnit 테스트 리포트 확인
-- 추후 프론트엔드 빌드 job 추가 가능
+- `main` 브랜치 푸시 시 **Gradle 빌드 + JUnit 테스트** 실행
+- 테스트 리포트 업로드 구성
+- (추후) 프론트엔드 빌드 job 추가 예정
 
-### 2. 장바구니 기능
-- **백엔드**
-  - API: `/api/cart`
-    - `POST /api/cart` → 장바구니에 상품 추가
-    - `GET /api/cart` → 현재 로그인 유저의 장바구니 조회
-    - `DELETE /api/cart/{itemId}` → 장바구니 아이템 삭제
-  - DB 테이블: `cart_items`
-    - `id`, `user_id`, `product_id`, `quantity`, `created_at`
-- **프론트엔드**
-  - “장바구니 담기” 버튼 → 상품 상세 페이지에서 동작
-  - `/cart` 페이지 구현 → 장바구니 목록, 수량, 삭제 기능
+### 장바구니 기능
+- **API (`/api/cart`)**
+  - `POST /api/cart` : 장바구니 업서트(지정 수량)
+  - `GET /api/cart`  : 로그인 사용자 장바구니 조회
+  - `DELETE /api/cart/{itemId}` : 아이템 삭제
+- **DB**
+  - `cart_items (id, user_id, product_id, quantity, created_at)`
 
 ---
+
+### ⚡ 문제 & 해결 (기능/DB 중심)
+
+1. 테스트 DB 불일치(H2 ↔ MySQL)로 CI 실패
+- 로컬은 H2, CI는 MySQL로 돌려 **쿼리/DDL 차이**로 테스트 실패.
+- **해결:** `test` 프로필을 **MySQL**로 통일해 로컬/CI 동일 환경으로 검증.  
+  *(대안: Testcontainers MySQL 도입 검토)*
+
+2. 리포지토리 JPQL 오타/바인딩 오류
+- 엔티티명 오타(`CarItem`)·파라미터 이름 불일치(`:itemId`)로 **컨텍스트 로딩/삭제 실패**.
+- **해결:** `@Query` 제거하고 **파생 쿼리**로 전환  
+  `findByUserIdAndProductId(...)`, `findByUserIdAndId(...)`.
+
+3. “상품이 존재하지 않습니다.” 예외
+- 장바구니 담기 시 대상 `product_id`가 **products**에 없음.
+- **해결:** 테스트 전에 **상품 시드** 삽입(`@BeforeEach save(...)`, 반환된 **id 동적 사용**.
+
+4. 삭제 권한 검증
+- 임의 `itemId`로 타 유저의 아이템 삭제 가능성.
+- **해결:** 조회에 **소유자 조건 포함**  
+  `findByUserIdAndId(userId, itemId)`로 존재·소유 동시 확인 후 삭제.
+
+> **권장 제약/인덱스**
+> ```sql
+> ALTER TABLE cart_items
+>   ADD CONSTRAINT uq_cart_user_product UNIQUE (user_id, product_id);
+> CREATE INDEX idx_cart_user ON cart_items(user_id);
+> ```
+
+---
+
+### ✨ 오늘의 성과
+- 로컬/CI **테스트 환경 일치** → 파이프라인 안정화
+- 리포지토리 **파생 쿼리 전환** → 컨텍스트 로딩 오류 제거
+- 테스트 **데이터 시드 표준화**로 재현성↑
+- 장바구니 핵심 플로우(담기→조회→업서트→삭제) 정상 동작 검증
+
+---
+
+## 4) 다음 할 일
+- **Testcontainers(MySQL)** 도입으로 로컬/CI 완전 일치 환경 구축
+- 전역 예외 처리(`@RestControllerAdvice`)로 에러 응답 포맷 통일(예: 404/400 JSON)
+- 수량 검증 강화(`quantity >= 1`): DB 제약 또는 서비스 레벨 검증
+- 헤더에 장바구니 뱃지(총 수량/금액) 노출, 주문 플로우 초안 연결
+
+---
+
+### 참고 메모
+- 인증 의존 테스트는 `@WithMockUser(username = "1")`으로 **userId=1** 가정 일관화
+- 자동 증가 ID는 **하드코딩 금지**, `save(...)` 반환 ID 사용
+
+---
+
 
