@@ -25,12 +25,15 @@ public class Product {
     @Column(nullable = false)
     private Integer stock;
 
+    private String imageUrl;
+
     protected Product() {}
 
-    public Product(String name, Long price, Integer stock) {
+    public Product(String name, Long price, Integer stock, String imageUrl) {
         this.name = name;
         this.price = price;
         this.stock = stock;
+        this.imageUrl = imageUrl;
     }
 
 /*    public Long getId() { return id; }

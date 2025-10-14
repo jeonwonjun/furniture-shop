@@ -1,4 +1,5 @@
 HELP.md
+furniture-shop.pem
 .gradle
 build/
 !gradle/wrapper/gradle-wrapper.jar

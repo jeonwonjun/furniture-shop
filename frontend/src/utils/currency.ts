@@ -1,0 +1,1 @@
+export const krw = new Intl.NumberFormat("ko-KR");

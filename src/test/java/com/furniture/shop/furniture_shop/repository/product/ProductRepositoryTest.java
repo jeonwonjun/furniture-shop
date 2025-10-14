@@ -29,7 +29,7 @@ class ProductRepositoryTest {
     @Test
     @DisplayName("Product 저장 & 존재 확인")
     void saveAndExists() {
-        Product p = new Product("의자 A", 129000L, 50);
+        Product p = new Product("의자 A", 129000L, 23, "url");
         productRepository.save(p);
 
         assertThat(p.getId()).isNotNull();
