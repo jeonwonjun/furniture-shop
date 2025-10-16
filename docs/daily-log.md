@@ -153,7 +153,7 @@
 
 오늘부터는 AI 없이, 또는 '참고'하여 기본부터 최소 단위로 구축 후 빠르게 배포하는 방향으로 진행할 예정이다.
 
-1. 요구사항 분석
+1. [요구사항 분석](https://docs.google.com/spreadsheets/d/1T7nwAaSk0EeqetnZjxFocVZTuovcr06tu_AHs67Cvio/edit?gid=0#gid=0)
 2. 기능 명세서 작성
 3. API 설계
 4. 아키텍처 설계
@@ -163,6 +163,7 @@
 순서로 빠르게 MVP 배포 후 리팩토링 및 확장을 진행하겠다.
 
 ---
+
 
 
 
