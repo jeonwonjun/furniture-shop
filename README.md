@@ -29,6 +29,11 @@
 Day별 진행 로그는 [📘 Daily Log](docs/daily-log.md)에서 확인할 수 있습니다.
 
 ---
+
+## 요구사항 분석
+1. [요구사항 분석](https://docs.google.com/spreadsheets/d/1T7nwAaSk0EeqetnZjxFocVZTuovcr06tu_AHs67Cvio/edit?gid=0#gid=0)
+
+---
 ## 플로우차트
 ### 회원가입 로그인
 <img width="320" height="640" alt="회원가입 플로우차트" src="https://github.com/user-attachments/assets/9fc2629a-7e90-4108-b9d4-8ce95ffa00c9" />
